@@ -8,6 +8,8 @@ public class ClickToMove : MonoBehaviour
     #region Exposed
 
     [SerializeField] private float _speed;
+    [SerializeField] Interactable _focus;
+    [SerializeField] private LayerMask _movementMask;
 
     #endregion
 
@@ -23,9 +25,13 @@ public class ClickToMove : MonoBehaviour
         if (Input.GetMouseButton(1))
         {
             GetPosition();
-        }
-        
+        }        
         MoveToPosition();
+
+        if (Input.GetMouseButton(0))
+        {
+            RemoveFocus();
+        }
     }
     private void FixedUpdate()
     {
@@ -39,10 +45,16 @@ public class ClickToMove : MonoBehaviour
     {
         RaycastHit _hit;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out _hit))
+        if (Physics.Raycast(ray, out _hit, 100, _movementMask))
         {
             _position = _hit.point;
-            Debug.Log(_position);
+            //Debug.Log(_position);
+            Interactable interactable = _hit.collider.GetComponent<Interactable>();
+            if (interactable != null) 
+            {
+                Debug.Log("INTERACTABLE");
+                SetFocus(interactable);
+            }
         }
     }
 
@@ -56,6 +68,30 @@ public class ClickToMove : MonoBehaviour
         }
     }
 
+    void SetFocus(Interactable newFocus)
+    {
+        if (newFocus != _focus)
+        {
+            if (_focus != null) 
+            { 
+            _focus.OnDefocused();
+            _focus = newFocus;
+            
+            }
+        }
+        newFocus.OnFocused(transform);
+    }
+
+    void RemoveFocus()
+    {
+        _focus.OnDefocused();
+        _focus = null;
+    }
+
+    public void FollowTarget (Interactable newTarget)
+    {
+
+    }
     #endregion
 
     #region Private & Protected
