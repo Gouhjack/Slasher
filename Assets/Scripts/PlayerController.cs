@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     private Camera cam;
     PlayerMotor motor;
 
+    public Interactable _focus;
     #endregion
 
     #region Unity LifeCycle
@@ -28,7 +29,7 @@ public class PlayerController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out _hit, 100))
             {
-                motor.MoveToPoint(_hit.point);
+                
                 //_position = _hit.point;
                 //Debug.Log(_position);
                 Interactable interactable = _hit.collider.GetComponent<Interactable>();
@@ -46,9 +47,9 @@ public class PlayerController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out _hit, 100))
             {
-
-            }
+                motor.MoveToPoint(_hit.point);
                 RemoveFocus();
+            }
         }
     }
     private void FixedUpdate()
@@ -58,6 +59,31 @@ public class PlayerController : MonoBehaviour
     #endregion
 
     #region Methods
+
+    void SetFocus(Interactable newFocus)
+    {
+        if (newFocus != _focus)
+        {
+            if (_focus != null)
+            {
+                _focus.OnDefocused();
+                _focus = newFocus;
+
+            }
+        }
+        newFocus.OnFocused(transform);
+        motor.FollowTarget(newFocus);
+    }
+
+    void RemoveFocus()
+    {
+        if (_focus != null)
+        { 
+            _focus.OnDefocused();
+        }
+        _focus = null;
+        motor.StopFollowTarget();
+    }
 
     #endregion
 

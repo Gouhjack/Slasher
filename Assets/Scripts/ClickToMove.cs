@@ -30,7 +30,7 @@ public class ClickToMove : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            RemoveFocus();
+  //          RemoveFocus();
         }
     }
     private void FixedUpdate()
@@ -53,7 +53,7 @@ public class ClickToMove : MonoBehaviour
             if (interactable != null) 
             {
                 Debug.Log("INTERACTABLE");
-                SetFocus(interactable);
+               // SetFocus(interactable);
             }
         }
     }
@@ -68,25 +68,25 @@ public class ClickToMove : MonoBehaviour
         }
     }
 
-    void SetFocus(Interactable newFocus)
-    {
-        if (newFocus != _focus)
-        {
-            if (_focus != null) 
-            { 
-            _focus.OnDefocused();
-            _focus = newFocus;
-            
-            }
-        }
-        newFocus.OnFocused(transform);
-    }
+  //  void SetFocus(Interactable newFocus)
+  //  {
+  //      if (newFocus != _focus)
+  //      {
+  //          if (_focus != null) 
+  //          { 
+  //          _focus.OnDefocused();
+  //          _focus = newFocus;
+  //          
+  //          }
+  //      }
+  //      newFocus.OnFocused(transform);
+  //  }
 
-    void RemoveFocus()
-    {
-        _focus.OnDefocused();
-        _focus = null;
-    }
+  // void RemoveFocus()
+  // {
+  //     _focus.OnDefocused();
+  //     _focus = null;
+  // }
 
     public void FollowTarget (Interactable newTarget)
     {

@@ -6,9 +6,13 @@ public class Interactable : MonoBehaviour
 {
 
     public float radius = 3f;
+
     public Transform interactionTransform;
+
     public bool isFocus = false;
+
     private Transform player;
+
     private bool hasInteracted = false;
 
     private void Update()

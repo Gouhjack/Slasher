@@ -7,6 +7,7 @@ using UnityEngine.AI;
 public class PlayerMotor : MonoBehaviour
 {
     #region Exposed
+    private Transform target;
     private NavMeshAgent agent;
     #endregion
 
@@ -18,7 +19,11 @@ public class PlayerMotor : MonoBehaviour
 
     void Update()
     {
-        
+        if (target != null) 
+        {
+            agent.SetDestination(target.position);
+            FaceTarget();
+        }
     }
     private void FixedUpdate()
     {
@@ -33,6 +38,28 @@ public class PlayerMotor : MonoBehaviour
         agent.SetDestination(point);
     }
 
+    public void FollowTarget (Interactable newTarget)
+    {
+        agent.stoppingDistance = newTarget.radius * .8f;
+        agent.updateRotation = false;
+
+        target = newTarget.transform;
+    }
+
+    public void StopFollowTarget()
+    {
+        agent.stoppingDistance = 0;
+        agent.updateRotation = true;
+
+        target = null;
+    }
+
+    void FaceTarget()
+    {
+        Vector3 direction = (target.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z)); 
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5f);
+    }
     #endregion
 
     #region Private & Protected
